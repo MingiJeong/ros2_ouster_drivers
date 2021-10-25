@@ -34,7 +34,7 @@ import os
 def generate_launch_description():
     share_dir = get_package_share_directory("ros2_ouster")
     parameter_file = LaunchConfiguration("params_file")
-    node_name = "ouster_driver"
+    node_name = "driver"
 
     params_declare = DeclareLaunchArgument(
         "params_file",
@@ -49,7 +49,8 @@ def generate_launch_description():
         output="screen",
         emulate_tty=True,
         parameters=[parameter_file],
-        namespace="/",
+        # namespace="/",
+        namespace="ouster",
     )
 
     configure_event = EmitEvent(
@@ -81,7 +82,9 @@ def generate_launch_description():
             on_shutdown=[
                 EmitEvent(
                     event=ChangeState(
-                        lifecycle_node_matcher=matches_node_name(node_name=node_name),
+                        lifecycle_node_matcher=matches_node_name(
+                            node_name="ouster/" + node_name
+                        ),
                         transition_id=lifecycle_msgs.msg.Transition.TRANSITION_ACTIVE_SHUTDOWN,
                     )
                 ),
