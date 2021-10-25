@@ -51,6 +51,7 @@ def generate_launch_description():
         parameters=[parameter_file],
         # namespace="/",
         namespace="ouster",
+        # arguments=["--ros-args", "--log-level", "debug"],
     )
 
     configure_event = EmitEvent(

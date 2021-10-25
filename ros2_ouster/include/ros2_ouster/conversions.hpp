@@ -19,6 +19,9 @@
 #include <string>
 #include <vector>
 
+// #include "Eigen/Dense"
+// #include <iostream>
+
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
 #include "pcl_conversions/pcl_conversions.h"
@@ -107,9 +110,23 @@ toMsg(const Eigen::Matrix<double, 4, 4, Eigen::DontAlign> &mat,
 
   tf2::Transform tf;
 
-  tf.setOrigin({mat(3) / 1e3, mat(7) / 1e3, mat(11) / 1e3});
-  tf.setBasis({mat(0), mat(1), mat(2), mat(4), mat(5), mat(6), mat(8), mat(9),
-               mat(10)});
+  // tf.setOrigin({mat(3) / 1e3, mat(7) / 1e3, mat(11) / 1e3});
+  tf.setOrigin({mat(0, 3) / 1e3, mat(1, 3) / 1e3, mat(2, 3) / 1e3});
+  // tf.setBasis({mat(0), mat(1), mat(2), mat(4), mat(5), mat(6), mat(8),
+  // mat(9),
+  //              mat(10)});
+  tf.setBasis({mat(0, 0), mat(0, 1), mat(0, 2), mat(1, 0), mat(1, 1), mat(1, 2),
+               mat(2, 0), mat(2, 1), mat(2, 2)});
+
+  // std::cout << "matrix" << std::endl << mat << std::endl;
+  // std::cout << "translation:\t" << mat(0, 3) << '\t' << mat(1, 3) << '\t'
+  //           << mat(2, 3) << std::endl;
+  // std::cout << "rotation:\t" << '\t' << mat(0, 0) << '\t' << mat(0, 1) <<
+  // '\t'
+  //           << mat(0, 2) << '\t' << mat(1, 0) << '\t' << mat(1, 1) << '\t'
+  //           << mat(1, 2) << '\t' << mat(2, 0) << '\t' << mat(2, 1) << '\t'
+  //           << mat(2, 2) << std::endl;
+  // std::cout << "==========" << std::endl;
 
   geometry_msgs::msg::TransformStamped msg;
   msg.header.stamp = time;

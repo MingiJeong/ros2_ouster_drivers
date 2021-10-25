@@ -180,6 +180,13 @@ void OusterDriver::broadcastStaticTransforms(
     transforms.push_back(toMsg(mdata.lidar_to_sensor_transform,
                                _laser_sensor_frame, _laser_data_frame,
                                this->now()));
+
+    // std::cout << _imu_data_frame << " to " << _laser_sensor_frame
+    //           << " transform: " << mdata.imu_to_sensor_transform <<
+    //           std::endl;
+    // std::cout << _laser_data_frame << " to " << _laser_sensor_frame
+    //           << " transform: " << mdata.lidar_to_sensor_transform <<
+    //           std::endl;
     _tf_b->sendTransform(transforms);
   }
 }
