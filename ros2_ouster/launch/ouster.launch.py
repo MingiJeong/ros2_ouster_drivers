@@ -35,17 +35,23 @@ def generate_launch_description():
     share_dir = get_package_share_directory("ros2_ouster")
     parameter_file = LaunchConfiguration("params_file")
     namespace = LaunchConfiguration("namespace")
+    recording = LaunchConfiguration("recording")
     node_name = "driver"
 
+    namespace_declare = DeclareLaunchArgument(
+        "namespace",
+        default_value="ouster",
+        description="Namespace for ouster driver node",
+    )
     params_declare = DeclareLaunchArgument(
         "params_file",
         default_value=os.path.join(share_dir, "params", "sensor.yaml"),
         description="FPath to the ROS2 parameters file to use.",
     )
-    namespace_declare = DeclareLaunchArgument(
-        "namespace",
-        default_value="ouster",
-        description="Namespace for ouster driver node",
+    recording_declare = DeclareLaunchArgument(
+        "recording",
+        default_value="False",
+        description="Whether LIDAR data will be recorded",
     )
 
     driver_node = LifecycleNode(
@@ -54,7 +60,7 @@ def generate_launch_description():
         name=node_name,
         output="screen",
         emulate_tty=True,
-        parameters=[parameter_file],
+        parameters=[parameter_file, {"use_system_default_qos": recording}],
         # namespace="/",
         namespace=namespace,
         # arguments=["--ros-args", "--log-level", "debug"],
@@ -104,6 +110,7 @@ def generate_launch_description():
         [
             namespace_declare,
             params_declare,
+            recording_declare,
             driver_node,
             activate_event,
             configure_event,
